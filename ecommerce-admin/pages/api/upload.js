@@ -1,70 +1,50 @@
-export default function handler(req, res) {
-  if (req.method === 'POST') {
-    try {
-      const base64Images = req.body;
+import multiparty from 'multiparty';
+import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
+import fs from 'fs';
+import mime from 'mime-types';
+import {mongooseConnect} from "@/lib/mongoose";
+import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
+const bucketName = 'wisdom-faashions';
 
-      // Handle base64 images here, for example, save them to the database
-      // For demonstration purposes, let's just log the base64 images
-      console.log('Base64 Images:', base64Images);
+export default async function handle(req,res) {
+  await mongooseConnect();
+  await isAdminRequest(req,res);
 
-      res.status(200).json({ message: 'Images uploaded successfully' });
-    } catch (error) {
-      console.error('Error uploading images:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  } else {
-    res.status(405).json({ message: 'Method Not Allowed' });
+  const form = new multiparty.Form();
+  const {fields,files} = await new Promise((resolve,reject) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) reject(err);
+      resolve({fields,files});
+    });
+  });
+  // console.log('length:', files);
+  const client = new S3Client({
+    region: 'us-east-1',
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    },
+  });
+  // console.log("in");
+  const links = [];
+  for (const file of files.file) {
+    const ext = file.originalFilename.split('.').pop();
+    const newFilename = Date.now() + '.' + ext;
+    // console.log("before");
+    await client.send(new PutObjectCommand({
+      Bucket: bucketName,
+      Key: newFilename,
+      Body: fs.readFileSync(file.path),
+      ACL: 'public-read',
+      ContentType: mime.lookup(file.path),
+    }));
+    // console.log("after");
+    const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+    links.push(link);
   }
+  return res.json({links});
 }
 
-
-
-
-
-// import multiparty from 'multiparty';
-// import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
-// import fs from 'fs';
-// import mime from 'mime-types';
-// import {mongooseConnect} from "@/lib/mongoose";
-// import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
-// const bucketName = 'dawid-next-ecommerce';
-
-// export default async function handle(req,res) {
-//   await mongooseConnect();
-//   await isAdminRequest(req,res);
-
-//   const form = new multiparty.Form();
-//   const {fields,files} = await new Promise((resolve,reject) => {
-//     form.parse(req, (err, fields, files) => {
-//       if (err) reject(err);
-//       resolve({fields,files});
-//     });
-//   });
-//   console.log('length:', files.file.length);
-//   const client = new S3Client({
-//     region: 'us-east-1',
-//     credentials: {
-//       accessKeyId: process.env.S3_ACCESS_KEY,
-//       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-//     },
-//   });
-//   const links = [];
-//   for (const file of files.file) {
-//     const ext = file.originalFilename.split('.').pop();
-//     const newFilename = Date.now() + '.' + ext;
-//     await client.send(new PutObjectCommand({
-//       Bucket: bucketName,
-//       Key: newFilename,
-//       Body: fs.readFileSync(file.path),
-//       ACL: 'public-read',
-//       ContentType: mime.lookup(file.path),
-//     }));
-//     const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
-//     links.push(link);
-//   }
-//   return res.json({links});
-// }
-
-// export const config = {
-//   api: {bodyParser: false},
-// };
+export const config = {
+  api: {bodyParser: false},
+};

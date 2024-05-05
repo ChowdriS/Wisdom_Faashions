@@ -61,29 +61,29 @@ export default function Featured({product}) {
   function addFeaturedToCart() {
     addProduct(product._id);
   }
-  return (<></>
-    // <Bg>
-    //   <Center>
-    //     <ColumnsWrapper>
-    //       <Column>
-    //         <div>
-    //           <Title>{product.title}</Title>
-    //           <Desc>{product.description}</Desc>
-    //           <ButtonsWrapper>
-    //             <ButtonLink href={'/product/'+product._id} outline={1} white={1}>Read more</ButtonLink>
-    //             <Button white onClick={addFeaturedToCart}>
-    //               <CartIcon />
-    //               Add to cart
-    //             </Button>
-    //           </ButtonsWrapper>
-    //         </div>
-    //       </Column>
-    //       <Column>
-    //         <img src="https://dawid-next-ecommerce.s3.amazonaws.com/1679151719649.png" alt=""/>
-    //       </Column>
-    //     </ColumnsWrapper>
-    //   </Center>
+  return (
+    <Bg>
+      <Center>
+        <ColumnsWrapper>
+          <Column>
+            <div>
+              <Title>{product.title}</Title>
+              <Desc>{product.description}</Desc>
+              <ButtonsWrapper>
+                <ButtonLink href={'/product/'+product._id} outline={1} white={1}>Read more</ButtonLink>
+                <Button white onClick={addFeaturedToCart}>
+                  <CartIcon />
+                  Add to cart
+                </Button>
+              </ButtonsWrapper>
+            </div>
+          </Column>
+          <Column>
+            <img src="https://wisdom-faashions.s3.amazonaws.com/1714917907334.jpg" alt=""/>
+          </Column>
+        </ColumnsWrapper>
+      </Center>
 
-    // </Bg>
+    </Bg>
   );
 }
