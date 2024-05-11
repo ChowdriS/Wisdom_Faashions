@@ -69,7 +69,7 @@ export default function Header() {
     <StyledHeader>
       <Center>
         <Wrapper>
-          <Logo href={'/'}>Wisdom Faashions</Logo>
+          <Logo href={'/'}>Wisdom Faashions!</Logo>
           <StyledNav mobileNavActive={mobileNavActive}>
             <NavLink href={'/'}>Home</NavLink>
             <NavLink href={'/products'}>All products</NavLink>
