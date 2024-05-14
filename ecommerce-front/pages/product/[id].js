@@ -10,6 +10,7 @@ import Button from "@/components/Button";
 import CartIcon from "@/components/icons/CartIcon";
 import {useContext} from "react";
 import {CartContext} from "@/components/CartContext";
+import ProductsGrid from "@/components/ProductsGrid";
 
 const ColWrapper = styled.div`
   display: grid;
@@ -29,7 +30,7 @@ const Price = styled.span`
   font-size: 1.4rem;
 `;
 
-export default function ProductPage({product}) {
+export default function ProductPage({product,allproducts}) {
   const {addProduct} = useContext(CartContext);
   return (
     <>
@@ -55,6 +56,10 @@ export default function ProductPage({product}) {
           </div>
         </ColWrapper>
       </Center>
+      <Center>
+        <Title>All products</Title>
+        <ProductsGrid products={allproducts} />
+      </Center>
     </>
   );
 }
@@ -63,9 +68,11 @@ export async function getServerSideProps(context) {
   await mongooseConnect();
   const {id} = context.query;
   const product = await Product.findById(id);
+  const allproducts = await Product.find({}, null, {sort:{'_id':-1}});
   return {
     props: {
       product: JSON.parse(JSON.stringify(product)),
+      allproducts: JSON.parse(JSON.stringify(allproducts)),
     }
   }
 }

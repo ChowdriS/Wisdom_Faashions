@@ -5,6 +5,7 @@ export function mongooseConnect() {
     return mongoose.connection.asPromise();
   } else {
     const uri = process.env.MONGODB_URI;
+    console.log("MongoDb Connected");
     return mongoose.connect(uri);
   }
 }

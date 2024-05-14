@@ -79,7 +79,7 @@ export default function Featured({product}) {
             </div>
           </Column>
           <Column>
-            <img src="https://wisdom-faashions.s3.amazonaws.com/1714917907334.jpg" alt=""/>
+            <img src="https://wisdom-faashions.s3.amazonaws.com/1715493500441.webp" alt=""/>
           </Column>
         </ColumnsWrapper>
       </Center>

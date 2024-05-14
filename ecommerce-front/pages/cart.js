@@ -106,9 +106,9 @@ export default function CartPage() {
       name,email,city,postalCode,streetAddress,country,
       cartProducts,
     });
-    if (response.data.url) {
-      window.location = response.data.url;
-    }
+    setIsSuccess(true);
+    // console.log(isSuccess);
+    clearCart();
   }
   let total = 0;
   for (const productId of cartProducts) {
@@ -169,14 +169,14 @@ export default function CartPage() {
                           onClick={() => moreOfThisProduct(product._id)}>+</Button>
                       </td>
                       <td>
-                        ${cartProducts.filter(id => id === product._id).length * product.price}
+                        Rs.{cartProducts.filter(id => id === product._id).length * product.price}
                       </td>
                     </tr>
                   ))}
                   <tr>
                     <td></td>
                     <td></td>
-                    <td>${total}</td>
+                    <td>Rs.{total}</td>
                   </tr>
                 </tbody>
               </Table>

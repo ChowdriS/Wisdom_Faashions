@@ -3,19 +3,20 @@ import Featured from "@/components/Featured";
 import {Product} from "@/models/Product";
 import {mongooseConnect} from "@/lib/mongoose";
 import NewProducts from "@/components/NewProducts";
+import Provider from "@/components/Layout";
 
 export default function HomePage({featuredProduct,newProducts}) {
   return (
-    <div>
-      <Header />
-      <Featured product={featuredProduct} />
-      <NewProducts products={newProducts} />
-    </div>
+      <Provider>
+        <Header />
+        <Featured product={featuredProduct} />
+        <NewProducts products={newProducts} />
+      </Provider>
   );
 }
 
 export async function getServerSideProps() {
-  const featuredProductId = '66379220b3cae0885563e91a';
+  const featuredProductId = '66405ad0edc9ecf8586f0987';
   await mongooseConnect();
   const featuredProduct = await Product.findById(featuredProductId);
   const newProducts = await Product.find({}, null, {sort: {'_id':-1}, limit:10});

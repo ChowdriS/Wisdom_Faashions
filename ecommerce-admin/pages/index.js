@@ -9,10 +9,10 @@ import { Product } from "@/models/Product";
 import React from 'react';
 
 const ProductCard = ({ product }) => (
-    <div className="w-64 h-64 rounded overflow-hidden shadow-lg">
-        <img className=" object-contain w-full h-2/5" src={product.images[0]} alt={product.title} />
-        <div className="px-6 py-4">
-            <div className="font-bold text-xl mb-2">{product.title}</div>
+    <div className="w-64 h-80 rounded overflow-hidden shadow-lg mt-4 mx-2">
+        <img className=" object-contain w-full h-1/3 mt-4" src={product.images[0]} alt={product.title} />
+        <div className="px-6 py-2">
+            <div className="font-bold text-xl mb-2 text-center">{product.title}</div>
             <p className="text-gray-700 text-base">{product.description}</p>
             <p className="text-gray-900 text-xl mt-2">Rs.{product.price}</p>
         </div>
@@ -35,7 +35,7 @@ export default function Home({featuredProduct,newProducts}) {
         </span>
       </div>
     </div>
-    <div className="mt-32 flex flex-wrap">
+    <div className="mt-16 flex flex-wrap">
     {newProducts.map(product => (
             <ProductCard key={product._id} product={product} />
         ))}
@@ -45,10 +45,11 @@ export default function Home({featuredProduct,newProducts}) {
 
 
 export async function getServerSideProps() {
-  const featuredProductId = '66379220b3cae0885563e91a';
+  const featuredProductId = '66405ad0edc9ecf8586f0987';
   await mongooseConnect();
   const featuredProduct = await Product.findById(featuredProductId);
   const newProducts = await Product.find({}, null, {sort: {'_id':-1}, limit:10});
+  // console.log(newProducts);
   return {
     props: {
       featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),
