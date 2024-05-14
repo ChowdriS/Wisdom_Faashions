@@ -45,7 +45,7 @@ export default function ProductPage({product,allproducts}) {
             <p>{product.description}</p>
             <PriceRow>
               <div>
-                <Price>${product.price}</Price>
+                <Price>Rs.{product.price}</Price>
               </div>
               <div>
                 <Button primary onClick={() => addProduct(product._id)}>
