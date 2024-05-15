@@ -68,6 +68,7 @@ const CityHolder = styled.div`
 
 export default function CartPage() {
   const {cartProducts,addProduct,removeProduct,clearCart} = useContext(CartContext);
+  // clearCart();
   const [products,setProducts] = useState([]);
   const [name,setName] = useState('');
   const [email,setEmail] = useState('');
@@ -102,13 +103,18 @@ export default function CartPage() {
     removeProduct(id);
   }
   async function goToPayment() {
-    const response = await axios.post('/api/checkout', {
-      name,email,city,postalCode,streetAddress,country,
-      cartProducts,
-    });
-    setIsSuccess(true);
-    // console.log(isSuccess);
-    clearCart();
+    if(name=="" || email=="" || city=="" || postalCode=="" || streetAddress=="" || country=="" || cartProducts==""){
+        alert("All details need to be filled!!");
+    }
+    else{
+      const response = await axios.post('/api/checkout', {
+        name,email,city,postalCode,streetAddress,country,
+        cartProducts,
+      });
+      setIsSuccess(true);
+      // console.log(isSuccess);
+      clearCart();
+    }
   }
   let total = 0;
   for (const productId of cartProducts) {
