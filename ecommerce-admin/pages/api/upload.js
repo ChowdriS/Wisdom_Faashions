@@ -4,7 +4,7 @@ import fs from 'fs';
 import mime from 'mime-types';
 import {mongooseConnect} from "@/lib/mongoose";
 import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
-const bucketName = 'wisdom-faashions';
+const bucketName = '';
 
 export default async function handle(req,res) {
   await mongooseConnect();
